@@ -555,24 +555,27 @@
     padding: 0.8rem 1.5rem;
   }
 
-  /* ── 書本主體：改為上下單欄，整頁可捲動 ───────────────────────────── */
+  /* ── 書本主體：固定全螢幕，不讓整頁捲動 ───────────────────────────── */
   #book {
     flex-direction: column;
     width: 100vw;
-    min-height: 100dvh;
-    max-height: none;   /* 取消高度上限，讓頁面自然伸長 */
+    height: 100dvh;     /* 精確鎖定在一個螢幕內 */
+    min-height: unset;
+    max-height: unset;
     border-radius: 0;
     box-shadow: none;
-    overflow: visible;  /* 讓 body 捲動而非書本內部捲動 */
+    overflow: hidden;
   }
 
-  /* ── 左頁（故事區）：自然高度，不限制 ─────────────────────────────── */
+  /* ── 左頁（故事+狀態+道具）：佔 58%，內部可上下滑動 ────────────────── */
   #left-page {
-    flex: none;
-    max-height: none;   /* 移除高度限制 */
-    overflow: visible;  /* 不在左頁內部捲動 */
+    flex: 0 0 58%;      /* 固定佔 58% 高度 */
+    overflow-y: auto;   /* 整個左頁內容可滑動 */
+    overflow-x: hidden;
     padding: 1rem 1rem 0.8rem;
     box-shadow: none;
+    /* 讓內部 flex 子元素自然堆疊（不再撐開高度） */
+    display: block;
   }
 
   /* 左頁頂部裝飾線調整 */
@@ -582,11 +585,22 @@
     right: 0.7rem;
   }
 
+  /* 左頁內改 block 後，故事與狀態欄各自佔用自然高度 */
+  .story-section {
+    overflow: visible;
+    margin-bottom: 0.5rem;
+  }
+
+  .stats-section,
+  .inventory-section {
+    /* 讓狀態欄和道具欄接在故事文字下方，可一起滑動看到 */
+  }
+
   /* ── 書脊：橫向細線 ─────────────────────────────────────────────── */
   .spine {
     width: 100%;
     height: 8px;
-    flex-shrink: 0;
+    flex: 0 0 8px;      /* 固定 8px，不伸縮 */
     background: linear-gradient(
       to bottom,
       rgba(0,0,0,0.25) 0%,
@@ -612,13 +626,14 @@
     transform: translateY(-50%);
   }
 
-  /* ── 右頁（選項區）：自然高度 ──────────────────────────────────────── */
+  /* ── 右頁（選項）：佔剩餘空間，內部可滑動 ──────────────────────────── */
   #right-page {
-    flex: none;
-    min-height: 50vh;   /* 至少佔半個畫面，讓選項有足夠空間 */
+    flex: 1;            /* 佔 100dvh - 58% - 8px 的剩餘空間 */
+    overflow-y: auto;   /* 選項多時也可滑動 */
+    overflow-x: hidden;
     padding: 0.8rem 1rem;
     box-shadow: none;
-    overflow: visible;
+    display: block;     /* 同左頁，改 block 讓子元素自然堆疊 */
   }
 
   #right-page::before {
@@ -627,12 +642,15 @@
     right: 0.7rem;
   }
 
-  /* ── 故事文字區：不限高度，完整顯示 ─────────────────────────────── */
-  .story-section {
-    overflow: visible;
-    flex: none;
+  /* 右頁改 block 後，選項區佔自然高度 */
+  .choices-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    justify-content: flex-start;
   }
 
+  /* ── 故事文字 ────────────────────────────────────────────────────── */
   #story-text {
     font-size: 0.92rem;
     line-height: 1.8;
