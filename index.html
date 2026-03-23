@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>命運之書 v2.0</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/book.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════
+       歡迎頁面：英雄創建
+  ════════════════════════════════════════════════════════════ -->
+  <div id="welcome">
+    <div class="welcome-inner">
+      <h1 class="welcome-title">命運之書</h1>
+      <p class="welcome-subtitle">FATE BOOK · v2.0</p>
+
+      <!-- 英雄名稱 -->
+      <div class="welcome-field">
+        <label for="hero-name">你的名字</label>
+        <input type="text" id="hero-name" placeholder="輸入英雄名稱…" maxlength="16" autocomplete="off" />
+      </div>
+
+      <!-- 職業選擇 -->
+      <p class="class-label">選擇職業</p>
+      <div class="class-cards">
+        <label class="class-card" id="class-swordsman">
+          <input type="radio" name="hero-class" value="swordsman" />
+          <div class="class-card-inner">
+            <span class="class-icon">⚔️</span>
+            <span class="class-name">劍士</span>
+            <span class="class-desc">HP 120 · 高防禦<br/>鐵壁 · 戰吼</span>
+          </div>
+        </label>
+
+        <label class="class-card" id="class-mage">
+          <input type="radio" name="hero-class" value="mage" />
+          <div class="class-card-inner">
+            <span class="class-icon">🔮</span>
+            <span class="class-name">法師</span>
+            <span class="class-desc">MP 60 · 高魔攻<br/>火球 · 閃電</span>
+          </div>
+        </label>
+
+        <label class="class-card" id="class-ranger">
+          <input type="radio" name="hero-class" value="ranger" />
+          <div class="class-card-inner">
+            <span class="class-icon">🏹</span>
+            <span class="class-name">遊俠</span>
+            <span class="class-desc">HP 100 · 高機動<br/>毒箭 · 連射</span>
+          </div>
+        </label>
+      </div>
+
+      <button id="start-btn">開始旅程</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       書本主體
+  ════════════════════════════════════════════════════════════ -->
+  <div id="book" style="display:none">
+
+    <!-- ── 左頁 ──────────────────────────────────────────────── -->
+    <div id="left-page">
+
+      <!-- 故事文字 -->
+      <div class="story-section">
+        <p id="story-text"></p>
+      </div>
+
+      <hr class="page-divider" />
+
+      <!-- 角色狀態欄 -->
+      <div class="stats-section">
+        <!-- HP 條 -->
+        <div class="stat-row">
+          <span class="stat-label">HP</span>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill--hp" id="hp-bar" style="width:100%"></div>
+          </div>
+          <span class="stat-value" id="hp-text">100 / 100</span>
+        </div>
+
+        <!-- MP 條 -->
+        <div class="stat-row">
+          <span class="stat-label">MP</span>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill--mp" id="mp-bar" style="width:100%"></div>
+          </div>
+          <span class="stat-value" id="mp-text">40 / 40</span>
+        </div>
+
+        <!-- XP 條 -->
+        <div class="stat-row">
+          <span class="stat-label">XP</span>
+          <div class="bar-track">
+            <div class="bar-fill bar-fill--xp" id="xp-bar" style="width:0%"></div>
+          </div>
+          <span class="stat-value" id="xp-text">Lv.1 — 0 / 100</span>
+        </div>
+
+        <!-- 數值徽章 -->
+        <div class="stat-badges">
+          <span class="stat-badge">⚔️ <span id="stat-atk">14</span></span>
+          <span class="stat-badge">🛡 <span id="stat-def">8</span></span>
+          <span class="stat-badge">💰 <span id="stat-gold">30</span></span>
+        </div>
+      </div>
+
+      <!-- 道具欄 -->
+      <div class="inventory-section">
+        <p class="inventory-label">道具欄</p>
+        <div id="inventory-grid">
+          <!-- 由 ui.js renderInventory() 動態產生 8 格 -->
+        </div>
+      </div>
+
+    </div><!-- /left-page -->
+
+    <!-- ── 書脊 ──────────────────────────────────────────────── -->
+    <div class="spine" aria-hidden="true"></div>
+
+    <!-- ── 右頁 ──────────────────────────────────────────────── -->
+    <div id="right-page">
+
+      <!-- 回合計數 -->
+      <div class="turn-display" id="turn-count">第 0 回合</div>
+
+      <!-- 狀態效果列 -->
+      <div id="status-effects" aria-label="狀態效果"></div>
+
+      <!-- 選項按鈕 -->
+      <div class="choices-section" id="choices">
+        <!-- 由 ui.js renderChoices() 動態產生 -->
+      </div>
+
+      <!-- 存讀檔按鈕 -->
+      <div class="save-buttons">
+        <button class="btn-page-action" id="btn-save">📖 存檔</button>
+        <button class="btn-page-action" id="btn-load">📂 讀檔</button>
+      </div>
+
+    </div><!-- /right-page -->
+
+    <!-- ── 戰鬥面板（疊加在書本上） ─────────────────────────── -->
+    <div id="combat-panel" role="dialog" aria-modal="true" aria-label="戰鬥">
+
+      <!-- 敵人資訊 -->
+      <div class="enemy-card">
+        <div class="enemy-name" id="enemy-name">👺 哥布林</div>
+        <div class="enemy-hp-row">
+          <div class="enemy-hp-bar-track">
+            <div id="enemy-hp-bar" style="width:100%"></div>
+          </div>
+          <span id="enemy-hp-text">18 / 18</span>
+        </div>
+      </div>
+
+      <!-- 戰鬥日誌 -->
+      <div id="combat-log" aria-live="polite" aria-label="戰鬥日誌"></div>
+
+      <!-- 行動按鈕 -->
+      <div class="combat-actions">
+        <!-- 技能按鈕（動態產生） -->
+        <div id="skill-buttons"></div>
+
+        <!-- 固定按鈕 -->
+        <button class="combat-btn combat-btn--attack" id="btn-attack">⚔️ 普通攻擊</button>
+        <button class="combat-btn combat-btn--flee" id="btn-flee">💨 嘗試逃跑</button>
+      </div>
+
+    </div><!-- /combat-panel -->
+
+  </div><!-- /book -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       存檔 Modal
+  ════════════════════════════════════════════════════════════ -->
+  <div id="save-modal" role="dialog" aria-modal="true" aria-label="存讀檔">
+    <div class="modal-box">
+
+      <div class="modal-header">
+        <h2 class="modal-title">📖 存檔</h2>
+        <button class="modal-close-btn" id="modal-close" aria-label="關閉">✕</button>
+      </div>
+
+      <div class="save-slots">
+
+        <!-- 手動存檔槽 0 -->
+        <div class="save-slot-card" data-slot="0">
+          <div class="slot-info">
+            <div class="slot-label">槽位 1</div>
+            <div class="slot-detail">空槽位</div>
+            <div class="slot-time">—</div>
+            <div class="slot-preview"></div>
+          </div>
+          <div class="slot-actions">
+            <button class="btn-save">存入</button>
+            <button class="btn-load" disabled>讀取</button>
+          </div>
+        </div>
+
+        <!-- 手動存檔槽 1 -->
+        <div class="save-slot-card" data-slot="1">
+          <div class="slot-info">
+            <div class="slot-label">槽位 2</div>
+            <div class="slot-detail">空槽位</div>
+            <div class="slot-time">—</div>
+            <div class="slot-preview"></div>
+          </div>
+          <div class="slot-actions">
+            <button class="btn-save">存入</button>
+            <button class="btn-load" disabled>讀取</button>
+          </div>
+        </div>
+
+        <!-- 手動存檔槽 2 -->
+        <div class="save-slot-card" data-slot="2">
+          <div class="slot-info">
+            <div class="slot-label">槽位 3</div>
+            <div class="slot-detail">空槽位</div>
+            <div class="slot-time">—</div>
+            <div class="slot-preview"></div>
+          </div>
+          <div class="slot-actions">
+            <button class="btn-save">存入</button>
+            <button class="btn-load" disabled>讀取</button>
+          </div>
+        </div>
+
+        <!-- 自動存檔槽 -->
+        <div class="save-slot-card" data-slot="auto">
+          <div class="slot-info">
+            <div class="slot-label">🔄 自動存檔</div>
+            <div class="slot-detail">空槽位</div>
+            <div class="slot-time">—</div>
+            <div class="slot-preview"></div>
+          </div>
+          <div class="slot-actions">
+            <!-- 自動存檔槽不能手動覆寫 -->
+            <button class="btn-load" disabled>讀取</button>
+          </div>
+        </div>
+
+      </div><!-- /save-slots -->
+    </div><!-- /modal-box -->
+  </div><!-- /save-modal -->
+
+  <!-- ════════════════════════════════════════════════════════════
+       結局畫面
+  ════════════════════════════════════════════════════════════ -->
+  <div id="ending-screen" role="dialog" aria-modal="true" aria-label="遊戲結局">
+    <div class="ending-type">✦ 結局</div>
+    <p class="ending-msg"></p>
+    <button id="btn-restart">重新開始</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       Toast 通知
+  ════════════════════════════════════════════════════════════ -->
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- ════════════════════════════════════════════════════════════
+       JavaScript（載入順序很重要）
+  ════════════════════════════════════════════════════════════ -->
+  <!-- 1. 資料層 -->
+  <script src="data/items.js"></script>
+  <script src="data/enemies.js"></script>
+  <script src="data/story.js"></script>
+
+  <!-- 2. 核心邏輯 -->
+  <script src="js/gameState.js"></script>
+  <script src="js/saveManager.js"></script>
+  <script src="js/combat.js"></script>
+  <script src="js/typewriter.js"></script>
+  <script src="js/storyEngine.js"></script>
+
+  <!-- 3. 介面層 -->
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

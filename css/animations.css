@@ -1,0 +1,200 @@
+/* animations.css — 打字機、翻頁、淡入、Toast 等動畫定義 */
+
+/* ── 全域：尊重使用者的動畫偏好 ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── 淡入動畫 ────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── 選項按鈕逐一淡入 ────────────────────────────────────────────── */
+.choice-btn {
+  animation: fadeInUp 250ms ease both;
+}
+
+/* 讓每個按鈕依序延遲出現 */
+.choice-btn:nth-child(1) { animation-delay: 0ms; }
+.choice-btn:nth-child(2) { animation-delay: 60ms; }
+.choice-btn:nth-child(3) { animation-delay: 120ms; }
+.choice-btn:nth-child(4) { animation-delay: 180ms; }
+
+/* ── 頁面切換（故事文字區） ──────────────────────────────────────── */
+@keyframes pageFlip {
+  0%   { opacity: 1; transform: translateX(0) rotateY(0deg); }
+  40%  { opacity: 0; transform: translateX(-20px) rotateY(8deg); }
+  60%  { opacity: 0; transform: translateX(20px) rotateY(-8deg); }
+  100% { opacity: 1; transform: translateX(0) rotateY(0deg); }
+}
+
+.page-flip {
+  animation: pageFlip 400ms ease;
+}
+
+/* ── 故事文字淡入 ─────────────────────────────────────────────────── */
+@keyframes storyFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+#story-text {
+  animation: storyFadeIn 300ms ease;
+}
+
+/* ── 書本開場動畫 ─────────────────────────────────────────────────── */
+@keyframes bookAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+#book {
+  animation: bookAppear 500ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* ── 歡迎頁面標題閃光 ────────────────────────────────────────────── */
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 2px 12px rgba(201, 168, 76, 0.3); }
+  50%       { text-shadow: 0 2px 24px rgba(201, 168, 76, 0.6), 0 0 40px rgba(201, 168, 76, 0.2); }
+}
+
+.welcome-title {
+  animation: titleGlow 3s ease-in-out infinite;
+}
+
+/* ── 存檔槽 hover 上浮 ────────────────────────────────────────────── */
+.save-slot-card {
+  transition: transform var(--transition-mid), border-color var(--transition-mid),
+              background var(--transition-mid), box-shadow var(--transition-mid);
+}
+
+.save-slot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* ── Toast 滑入滑出 ──────────────────────────────────────────────── */
+/* 已在 ui.css 中用 transform 實現，此處補充彈性進場 */
+#toast.toast--visible {
+  animation: toastBounce 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes toastBounce {
+  from { transform: translateX(120%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── 血條減少閃爍 ────────────────────────────────────────────────── */
+@keyframes barShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-3px); }
+  40%       { transform: translateX(3px); }
+  60%       { transform: translateX(-2px); }
+  80%       { transform: translateX(2px); }
+}
+
+.bar-shake {
+  animation: barShake 300ms ease;
+}
+
+/* ── 戰鬥面板滑入 ─────────────────────────────────────────────────── */
+@keyframes combatSlideIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+#combat-panel.combat--visible {
+  animation: combatSlideIn 250ms ease both;
+}
+
+/* ── 結局畫面展開 ─────────────────────────────────────────────────── */
+@keyframes endingReveal {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+#ending-screen.ending--visible {
+  animation: endingReveal 600ms ease both;
+}
+
+.ending-type {
+  animation: fadeInDown 500ms ease 200ms both;
+}
+
+.ending-msg {
+  animation: fadeInUp 600ms ease 500ms both;
+}
+
+#btn-restart {
+  animation: fadeInUp 600ms ease 1000ms both;
+}
+
+/* ── Modal 彈出 ──────────────────────────────────────────────────── */
+@keyframes modalAppear {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#save-modal.modal--visible .modal-box {
+  animation: modalAppear 300ms cubic-bezier(0.34, 1.2, 0.64, 1) both;
+}
+
+/* ── 打字機游標閃爍 ──────────────────────────────────────────────── */
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* 打字機效果結束前顯示游標（由 JS 控制 class） */
+.typing-cursor::after {
+  content: '|';
+  display: inline;
+  color: var(--color-accent);
+  animation: cursorBlink 800ms step-end infinite;
+  margin-left: 1px;
+}
+
+/* ── 升級特效 ────────────────────────────────────────────────────── */
+@keyframes levelUpPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.5); }
+  70%  { box-shadow: 0 0 0 12px rgba(201, 168, 76, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0); }
+}
+
+.level-up-flash {
+  animation: levelUpPulse 600ms ease;
+}
+
+/* ── BOSS 符文破碎 ────────────────────────────────────────────────── */
+@keyframes sealBreak {
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { opacity: 0.7; transform: scale(1.2); }
+  60%  { opacity: 0.3; transform: scale(0.8) rotate(5deg); }
+  100% { opacity: 0; transform: scale(0) rotate(10deg); }
+}
+
+.seal-break {
+  animation: sealBreak 500ms ease forwards;
+}

@@ -1,0 +1,26 @@
+# Claude Code 本地設定
+.claude/
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Node（若未來升級用到）
+node_modules/
+npm-debug.log*

@@ -1,0 +1,120 @@
+/* base.css — CSS 變數、reset、全域字型設定 */
+
+/* ── Google Fonts 引入（在 index.html 的 <head> 中引入） ─────────── */
+
+/* ── CSS 自訂屬性（全域設計 token） ─────────────────────────────── */
+:root {
+  /* 配色 */
+  --color-bg:         #1a0e04;   /* 深褐色木紋背景 */
+  --color-left-page:  #f5ead8;   /* 左頁羊皮紙色 */
+  --color-right-page: #ede0c4;   /* 右頁略深米色 */
+  --color-spine:      #6b3a1f;   /* 書脊棕色 */
+  --color-accent:     #c9a84c;   /* 金色強調 */
+  --color-accent-dark:#a07830;   /* 金色深版（hover） */
+  --color-text:       #2c1a0e;   /* 主文字深褐色 */
+  --color-text-muted: #7a5c3a;   /* 次要文字 */
+  --color-hp:         #c0392b;   /* 生命值紅 */
+  --color-mp:         #2980b9;   /* 魔力值藍 */
+  --color-xp:         #27ae60;   /* 經驗值綠 */
+  --color-border:     #c4a97a;   /* 分隔線金棕色 */
+  --color-shadow:     rgba(0, 0, 0, 0.4);
+
+  /* 字型 */
+  --font-serif:  'Noto Serif TC', 'Georgia', serif;  /* 正文 */
+  --font-title:  'Cinzel', 'Times New Roman', serif;  /* 標題 */
+
+  /* 尺寸 */
+  --book-max-width: 960px;
+  --page-padding:   1.5rem;
+  --spine-width:    10px;
+  --radius:         4px;
+  --radius-lg:      8px;
+
+  /* 動畫時間 */
+  --transition-fast: 150ms ease;
+  --transition-mid:  300ms ease;
+}
+
+/* ── Reset ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-serif);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  min-height: 100dvh; /* 動態視口高度（解決 iOS Safari 底部工具欄問題） */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 木紋質感用細微噪點漸層模擬 */
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.015) 2px,
+      rgba(255,255,255,0.015) 4px
+    );
+}
+
+button {
+  font-family: var(--font-serif);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input {
+  font-family: var(--font-serif);
+  /* 防止 iOS Safari 在 font-size < 16px 時自動 zoom in */
+  font-size: max(1rem, 16px);
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ── 捲軸美化 ────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+/* ── 輔助工具類別 ─────────────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-gold {
+  color: var(--color-accent);
+}

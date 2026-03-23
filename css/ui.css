@@ -1,0 +1,576 @@
+/* ui.css — 選項按鈕、戰鬥面板、存檔 modal、Toast、結局畫面 */
+
+/* ── 選項按鈕 ─────────────────────────────────────────────────────── */
+.choice-btn {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 1rem 0.65rem 1.2rem;
+  text-align: left;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-text);
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(180, 160, 120, 0.3);
+  border-radius: var(--radius);
+  position: relative;
+  transition: all var(--transition-mid);
+  /* 左側金色裝飾線（初始透明） */
+  border-left: 3px solid transparent;
+}
+
+.choice-btn::before {
+  content: '◆';
+  font-size: 0.5rem;
+  color: var(--color-accent);
+  opacity: 0;
+  position: absolute;
+  left: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity var(--transition-fast);
+}
+
+.choice-btn:hover {
+  background: linear-gradient(to right, rgba(201, 168, 76, 0.12), rgba(201, 168, 76, 0.04));
+  border-left-color: var(--color-accent);
+  padding-left: 1.5rem;  /* 輕微右移 */
+  color: #1a0e04;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.choice-btn:hover::before {
+  opacity: 1;
+}
+
+.choice-btn:active {
+  background: rgba(201, 168, 76, 0.15);
+  transform: translateX(2px);
+}
+
+/* ── 戰鬥面板 ────────────────────────────────────────────────────── */
+#combat-panel {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 14, 4, 0.92);
+  backdrop-filter: blur(4px);
+  display: none;
+  flex-direction: column;
+  padding: 1.5rem;
+  z-index: 10;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+#combat-panel.combat--visible {
+  display: flex;
+}
+
+/* 敵人資訊卡 */
+.enemy-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+}
+
+.enemy-name {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}
+
+.enemy-hp-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.enemy-hp-bar-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+#enemy-hp-bar {
+  height: 100%;
+  background: linear-gradient(to right, #7b241c, #e74c3c);
+  border-radius: 5px;
+  transition: width var(--transition-mid);
+}
+
+#enemy-hp-text {
+  font-size: 0.8rem;
+  color: #e74c3c;
+  flex-shrink: 0;
+  width: 5rem;
+  text-align: right;
+}
+
+/* 戰鬥日誌 */
+#combat-log {
+  flex: 1;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  min-height: 120px;
+  max-height: 200px;
+}
+
+#combat-log p {
+  font-size: 0.82rem;
+  color: rgba(245, 234, 216, 0.85);
+  margin-bottom: 0.3rem;
+  line-height: 1.5;
+}
+
+#combat-log p:last-child {
+  color: #f5ead8;
+}
+
+/* 行動按鈕區 */
+.combat-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.combat-btn {
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
+  border: 1px solid;
+}
+
+.combat-btn--attack {
+  background: rgba(192, 57, 43, 0.2);
+  border-color: rgba(192, 57, 43, 0.4);
+  color: #f1948a;
+}
+
+.combat-btn--attack:hover {
+  background: rgba(192, 57, 43, 0.35);
+  border-color: #e74c3c;
+}
+
+.combat-btn--flee {
+  background: rgba(127, 140, 141, 0.15);
+  border-color: rgba(127, 140, 141, 0.3);
+  color: #aab7b8;
+}
+
+.combat-btn--flee:hover {
+  background: rgba(127, 140, 141, 0.25);
+  border-color: #95a5a6;
+}
+
+/* 技能按鈕 */
+#skill-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.5rem 0.8rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: var(--radius);
+  border: 1px solid rgba(201, 168, 76, 0.35);
+  background: rgba(201, 168, 76, 0.08);
+  color: var(--color-accent);
+  font-size: 0.8rem;
+  transition: all var(--transition-fast);
+}
+
+.skill-btn:hover:not(:disabled) {
+  background: rgba(201, 168, 76, 0.18);
+  border-color: var(--color-accent);
+}
+
+.skill-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.skill-cost {
+  font-size: 0.7rem;
+  color: var(--color-mp);
+  opacity: 0.8;
+}
+
+/* ── 存檔 Modal ──────────────────────────────────────────────────── */
+#save-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 14, 4, 0.85);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 1rem;
+}
+
+#save-modal.modal--visible {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--color-left-page);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  width: min(480px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+}
+
+.modal-title {
+  font-family: var(--font-title);
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  letter-spacing: 0.1em;
+}
+
+.modal-close-btn {
+  font-size: 1.2rem;
+  color: var(--color-text-muted);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius);
+  transition: all var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  background: rgba(0,0,0,0.08);
+  color: var(--color-text);
+}
+
+/* 存檔槽卡片 */
+.save-slots {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.save-slot-card {
+  border: 1px solid rgba(180, 160, 120, 0.3);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  background: rgba(0,0,0,0.03);
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  transition: all var(--transition-mid);
+}
+
+.save-slot-card:hover {
+  border-color: var(--color-border);
+  background: rgba(201, 168, 76, 0.04);
+  transform: translateY(-1px);
+}
+
+.slot-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.slot-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.slot-detail {
+  font-size: 0.85rem;
+  color: var(--color-text);
+  font-weight: bold;
+  margin-bottom: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot-time {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.slot-preview {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.slot-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.btn-save,
+.btn-load {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  border-radius: var(--radius);
+  border: 1px solid;
+  transition: all var(--transition-fast);
+  letter-spacing: 0.03em;
+}
+
+.btn-save {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: rgba(201, 168, 76, 0.4);
+  color: var(--color-accent);
+}
+
+.btn-save:hover {
+  background: rgba(201, 168, 76, 0.2);
+  border-color: var(--color-accent);
+}
+
+.btn-load {
+  background: rgba(41, 128, 185, 0.1);
+  border-color: rgba(41, 128, 185, 0.4);
+  color: #2980b9;
+}
+
+.btn-load:hover:not(:disabled) {
+  background: rgba(41, 128, 185, 0.2);
+  border-color: #2980b9;
+}
+
+.btn-load:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ── Toast 通知 ──────────────────────────────────────────────────── */
+#toast {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.2rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  z-index: 200;
+  pointer-events: none;
+  /* 初始：在右側螢幕外 */
+  transform: translateX(120%);
+  transition: transform var(--transition-mid);
+  max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+#toast.toast--visible {
+  transform: translateX(0);
+}
+
+#toast.toast--info {
+  background: rgba(41, 128, 185, 0.9);
+  color: #fff;
+}
+
+#toast.toast--success {
+  background: rgba(39, 174, 96, 0.9);
+  color: #fff;
+}
+
+#toast.toast--warn {
+  background: rgba(243, 156, 18, 0.9);
+  color: #fff;
+}
+
+#toast.toast--error {
+  background: rgba(192, 57, 43, 0.9);
+  color: #fff;
+}
+
+/* ── 結局畫面 ────────────────────────────────────────────────────── */
+#ending-screen {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, #1a0e04 0%, #0a0500 100%);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 100;
+  padding: 2rem;
+}
+
+#ending-screen.ending--visible {
+  display: flex;
+}
+
+.ending-type {
+  font-family: var(--font-title);
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  color: var(--color-accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+.ending-msg {
+  font-size: clamp(1rem, 3vw, 1.3rem);
+  color: var(--color-left-page);
+  line-height: 1.9;
+  max-width: 560px;
+  margin-bottom: 3rem;
+  font-style: italic;
+}
+
+#btn-restart {
+  padding: 0.8rem 2.5rem;
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  letter-spacing: 0.15em;
+  color: var(--color-bg);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark));
+  border-radius: var(--radius);
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+  transition: all var(--transition-mid);
+}
+
+#btn-restart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(201, 168, 76, 0.4);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   手機 RWD — UI 元件斷點（≤768px）
+   ════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── 選項按鈕：加大點擊區域（≥44px，符合無障礙標準） ─────────────── */
+  .choice-btn {
+    padding: 0.75rem 1rem 0.75rem 1.2rem;
+    font-size: 0.9rem;
+    min-height: 44px;
+  }
+
+  /* ── 戰鬥面板 ────────────────────────────────────────────────────── */
+  #combat-panel {
+    padding: 1rem;
+    gap: 0.7rem;
+  }
+
+  .combat-actions {
+    gap: 0.4rem;
+  }
+
+  .combat-btn {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.8rem;
+    min-height: 44px;
+  }
+
+  #skill-buttons {
+    gap: 0.3rem;
+  }
+
+  .skill-btn {
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.75rem;
+    min-height: 40px;
+  }
+
+  #combat-log {
+    max-height: 140px;
+    font-size: 0.8rem;
+  }
+
+  /* ── Toast：手機全寬置底 ─────────────────────────────────────────── */
+  #toast {
+    top: auto;
+    bottom: 1rem;
+    right: 0.8rem;
+    left: 0.8rem;
+    max-width: none;
+    text-align: center;
+    font-size: 0.88rem;
+    border-radius: var(--radius-lg);
+  }
+
+  #toast.toast--visible {
+    animation: toastSlideUp 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  }
+
+  /* ── 存檔 Modal ──────────────────────────────────────────────────── */
+  .modal-box {
+    padding: 1rem;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    /* 從底部滑上來 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 85vh;
+    margin: 0;
+    animation: modalSlideUp 300ms cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  }
+
+  /* 存檔卡片：行改為垂直堆疊 */
+  .save-slot-card {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.7rem;
+  }
+
+  .slot-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+
+  .btn-save,
+  .btn-load {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.75rem;
+    min-height: 36px;
+  }
+
+  .slot-detail {
+    font-size: 0.8rem;
+  }
+}
+
+/* 手機 Toast 從底部滑上動畫 */
+@keyframes toastSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+/* 手機 Modal 從底部滑上動畫 */
+@keyframes modalSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
