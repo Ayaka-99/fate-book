@@ -555,22 +555,23 @@
     padding: 0.8rem 1.5rem;
   }
 
-  /* ── 書本主體：改為上下單欄 ──────────────────────────────────────── */
+  /* ── 書本主體：改為上下單欄，整頁可捲動 ───────────────────────────── */
   #book {
     flex-direction: column;
     width: 100vw;
     min-height: 100dvh;
-    max-height: none;
+    max-height: none;   /* 取消高度上限，讓頁面自然伸長 */
     border-radius: 0;
     box-shadow: none;
+    overflow: visible;  /* 讓 body 捲動而非書本內部捲動 */
   }
 
-  /* ── 左頁（故事區）：固定佔上半 ──────────────────────────────────── */
+  /* ── 左頁（故事區）：自然高度，不限制 ─────────────────────────────── */
   #left-page {
     flex: none;
-    max-height: 52vh;
-    overflow-y: auto;
-    padding: 0.9rem 0.9rem 0.6rem;
+    max-height: none;   /* 移除高度限制 */
+    overflow: visible;  /* 不在左頁內部捲動 */
+    padding: 1rem 1rem 0.8rem;
     box-shadow: none;
   }
 
@@ -611,12 +612,13 @@
     transform: translateY(-50%);
   }
 
-  /* ── 右頁（選項區）：佔下半 ──────────────────────────────────────── */
+  /* ── 右頁（選項區）：自然高度 ──────────────────────────────────────── */
   #right-page {
-    flex: 1;
-    padding: 0.8rem 0.9rem;
+    flex: none;
+    min-height: 50vh;   /* 至少佔半個畫面，讓選項有足夠空間 */
+    padding: 0.8rem 1rem;
     box-shadow: none;
-    overflow-y: auto;
+    overflow: visible;
   }
 
   #right-page::before {
@@ -625,10 +627,15 @@
     right: 0.7rem;
   }
 
-  /* ── 故事文字 ────────────────────────────────────────────────────── */
+  /* ── 故事文字區：不限高度，完整顯示 ─────────────────────────────── */
+  .story-section {
+    overflow: visible;
+    flex: none;
+  }
+
   #story-text {
-    font-size: 0.9rem;
-    line-height: 1.75;
+    font-size: 0.92rem;
+    line-height: 1.8;
   }
 
   /* ── 狀態欄 ─────────────────────────────────────────────────────── */
